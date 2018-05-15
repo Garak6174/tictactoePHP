@@ -1,3 +1,26 @@
+<?php
+session_start();
+
+require_once "tictactoe.php";
+require_once "player.php";
+require_once "board.php";
+
+if(empty($_SESSION['game']))
+{
+	echo ("is empty");
+	$p1 = new Player("Player 1", "X");
+	$p2 = new Player("Player 2", "O");
+	$newBoard = new Board();
+	$newGame = new TicTacToe($newBoard, $p1, $p2);
+}
+else
+{
+	echo ("is not empty");
+	$newGame = unserialize($_SESSION['game']);
+}
+$_SESSION['game'] = serialize($newGame);
+//session_destroy();
+?>
 <!DOCTYPE html>
 <head>
     <meta charset="utf-8">
@@ -41,23 +64,11 @@
             <h2>Your free browsergame!</h2>
             <p>Type your game instructions here...</p>
             <form method="get" action="index.php">
-                <table class="tic">
-                    <tr>
-                        <td><span class="colorO">O</span></td>
-                        <td><input type="submit" class="reset field" name="cell-0-1" value="X" /></td>
-                        <td><input type="submit" class="reset field" name="cell-0-2" value="X" /></td>
-                    </tr>
-                    <tr>
-                        <td><span class="colorX">X</span></td>
-                        <td><input type="submit" class="reset field" name="cell-1-1" value="X" /></td>
-                        <td><input type="submit" class="reset field" name="cell-1-2" value="X" /></td>
-                    </tr>
-                    <tr>
-                        <td><input type="submit" class="reset field" name="cell-2-0" value="X" /></td>
-                        <td><input type="submit" class="reset field" name="cell-2-1" value="X" /></td>
-                        <td><input type="submit" class="reset field" name="cell-2-2" value="X" /></td>
-                    </tr>
-                </table>
+                <?php
+					$newGame->board->displayBoard($newGame);
+					$newGame->setSymbol();
+					$_SESSION['game'] = serialize($newGame);
+				?>
             </form>
         </article>
     </section>
@@ -65,15 +76,7 @@
 </html>
 
 
-<?php
-require_once "tictactoe.php";
-require_once "player.php";
-require_once "board.php";
 
-$p1 = new Player("Player 1", "X");
-$p2 = new Player("Player 2", "O");
-$newBoard = new Board();
-$newGame = new TicTacToe($p1, $p2)
-?>
+
 
 
