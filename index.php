@@ -7,7 +7,6 @@ require_once "board.php";
 
 if(empty($_SESSION['game']))
 {
-	echo ("is empty");
 	$p1 = new Player("Player 1", "X");
 	$p2 = new Player("Player 2", "O");
 	$newBoard = new Board();
@@ -15,7 +14,6 @@ if(empty($_SESSION['game']))
 }
 else
 {
-	echo ("is not empty");
 	$newGame = unserialize($_SESSION['game']);
 }
 $_SESSION['game'] = serialize($newGame);
