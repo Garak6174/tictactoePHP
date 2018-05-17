@@ -143,11 +143,25 @@ class TicTacToe
 		return $newBoard;
 	}
 	
-	private function checkDiag($diag, $length)
+	private function checkDiag($curPlayer, $board, $length)
 	{
-		for ($n = 0; $n < $length)
+		$win1 = 0;
+		$win2 = 0;
+		for ($n = 0; $n < $length; $n++)
 		{
-		
+			if($board[$n][$n] == $curPlayer->getSymbol())
+			{
+				echo ("N + N");
+				$win1 += 1;
+			}
+			if($board[$length- 1 - $n][$length- 1 - $n] == $curPlayer->getSymbol())
+			{
+				$win2 += 1;
+			}
+		}
+		if($win1 or $win2 == 3)
+		{
+			return True;
 		}
 	}
 	
@@ -158,7 +172,7 @@ class TicTacToe
 		$flippedBoard = $this->flipBoard($board, $length);
 		for ($row = 0; $row < $length; $row++) 
 		{
-			if($this->checkRow($this->currentPlayer, $board[$row], $length) or $this->checkCol($this->currentPlayer, $flippedBoard[$row], $length))
+			if($this->checkRow($this->currentPlayer, $board[$row], $length) or $this->checkCol($this->currentPlayer, $flippedBoard[$row], $length) or $this->checkDiag($this->currentPlayer, $board, $length))
 			{
 				$this->winning = 1;
 				return;
