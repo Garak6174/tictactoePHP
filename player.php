@@ -22,10 +22,5 @@ class Player
 		// returns the name of the current player
 		return $this->playerName;
 	}
-	
-	public function getColor()
-	{
-		return $this->color;
-	}
 }
 ?>

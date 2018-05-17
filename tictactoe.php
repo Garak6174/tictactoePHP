@@ -14,6 +14,9 @@ class TicTacToe
 	$this->player2->color = "colorO";
 	$this->board = $board;
 	$this->currentPlayer = $this->player1;
+	$this->turn = 0;
+	$this->isRefreshed = True;
+	$this->winCondition = 0;
 	}
 	
 	public function getCurrentPlayer()
@@ -24,40 +27,86 @@ class TicTacToe
 	
 	public function switchPlayer()
 	{
-		// switches the player
-		$player_now = $this->getCurrentPlayer();
-		if ($player_now->getSymbol() == $this->player1->getSymbol())
+		$this->turn += 1;
+		if(($this->turn + 2) % 2 == 0)
 		{
-			$this->currentPlayer = $this->player2;
+			$this->currentPlayer = $this->player1;
 		}
 		else
 		{
-			$this->currentPlayer = $this->player1;
+			$this->currentPlayer = $this->player2;
+		}
+	}
+	private function refreshPage()
+	{
+		if(!$this->isRefreshed)
+		{
+			header("Refresh:0; url=index.php");
+			$this->isRefreshed = True;
 		}
 	}
 		
 	public function setSymbol()
 	{
-	// Returns the symbol of the current player on the game board		
+		//
+		$arraySize = pow(count($this->board->getArray()), 2);
+		//$arraySize = count($this->board->getArray(), 1);
+		
+		echo ($arraySize);
+		echo ("</br>");
+		var_dump($this->board->getArray());
+		if($this->turn >= $arraySize)
+		{
+			session_destroy();
+			header("Refresh:3; url=index.php");
+			$this->turn = 0;
+			
+		}
+		// Sets the symbol of the current player in an array at the given address
+		// Then switches the next player
+		// Checks if the page has been refreshed, if not -> refresh page
 		for($y = 0; $y < 3; $y++){
 			for($x = 0; $x < 3; $x++){
 				if(isset($_GET["cell-".$y."-".$x])) {
 					if(empty($this->board->boardArray[$y][$x])) {
 						$this->board->boardArray[$y][$x] = $_GET["cell-".$y."-".$x];
+						$this->switchPlayer();
+						$this->isRefreshed = False;
+						$this->refreshPage();
 					}
 				}
 			}
 		}
-		header("Refresh:0");
+		//header("Refresh:0; url=index.php");
+	}
+	
+	public function getColor($sym)
+	{
+		if($sym == "X")
+		{
+			return $this->player1->color;
+		}
+		else
+		{
+			return $this->player2->color;
+		}
 	}
 	
 		
 	public function checkWinCondition($board)
 	{
 	// checks if the is a win condition on the current board
-		for ($i = 1; $i <= 3; $i++) 
+		$length = count($this->board->getArray());
+		for ($row = 0; $row < $length; $row++) 
 		{
-			echo $i;
+			for ($col = 0; $row < length; $col++)
+			{
+				//checks each row for 3 same symbols
+				if(isset($board[$row][$col]))
+				{
+					
+				}
+			}
 		}
 	}
 }

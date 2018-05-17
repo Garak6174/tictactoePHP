@@ -12,7 +12,7 @@ class Board
 						array("", "", ""));
 	}
 	
-	public function boardArray()
+	public function getArray()
 	{
 		// returns the current board
 		return $this->boardArray;
@@ -20,6 +20,7 @@ class Board
 	
 	public function displayBoard($game)
 	{
+		$sym = "";
 		// displays the board to the screen
 		echo ('<table class="tic">');
 			for ($num = 0; $num < 3; $num++)
@@ -27,13 +28,14 @@ class Board
 				echo ('<tr>');
 				for ($i = 0; $i < 3; $i++)
 				{
+				$sym = $game->board->boardArray[$num][$i];
 					if(empty($game->board->boardArray[$num][$i]))
 					{
 						echo ('<td><input type="submit" class="reset field" name="cell-'.$num.'-'.$i.'" value="'.$game->getCurrentPlayer()->getSymbol().'" /></td>');
 					}
 					else
 					{
-						echo ('<td><span class="'.$game->getCurrentPlayer()->getColor().'">'.$game->board->boardArray[$num][$i].'</span></td>');
+						echo ('<td><span class="'.$game->getColor($sym).'">'.$sym.'</span></td>');
 					}
 				}
 				echo ('</tr>');
