@@ -7,8 +7,8 @@ require_once "board.php";
 
 if(empty($_SESSION['game']))
 {
-	$p1 = new Player("Player 1", "X");
-	$p2 = new Player("Player 2", "O");
+	$p1 = new Player("Player/X/", "X");
+	$p2 = new Player("Player/O/", "O");
 	$newBoard = new Board();
 	$newGame = new TicTacToe($newBoard, $p1, $p2);
 }

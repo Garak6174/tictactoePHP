@@ -16,7 +16,8 @@ class TicTacToe
 	$this->currentPlayer = $this->player1;
 	$this->turn = 0;
 	$this->isRefreshed = True;
-	$this->winning = False;
+	$this->won = False;
+	$this->winner = null;
 	}
 	
 	public function getCurrentPlayer()
@@ -41,7 +42,7 @@ class TicTacToe
 	{
 		if(!$this->isRefreshed)
 		{
-			header("Refresh:1; url=index.php");
+			header("Refresh:0; url=index.php");
 			$this->isRefreshed = True;
 		}
 	}
@@ -51,7 +52,7 @@ class TicTacToe
 		//
 		$arraySize = pow(count($this->board->getArray()), 2);
 		//$arraySize = count($this->board->getArray(), 1);
-		if($this->turn >= $arraySize)
+		if($this->turn >= $arraySize or $this->won == True)
 		{
 			session_destroy();
 			header("Refresh:3; url=index.php");
@@ -66,19 +67,18 @@ class TicTacToe
 				if(isset($_GET["cell-".$y."-".$x])) {
 					if(empty($this->board->boardArray[$y][$x])) {
 						$this->board->boardArray[$y][$x] = $_GET["cell-".$y."-".$x];
-						$this->checkWinCondition($this->board->getArray());
+						$this->checkWinCondition($this->board->getArray(), $this->currentPlayer);
 						$this->isRefreshed = False;
-						if($this->winning)
-						{
-							echo ($this->currentPlayer->getName()." has WON");
-						}
 						$this->switchPlayer();
 						$this->refreshPage();
 					}
 				}
 			}
 		}
-		//header("Refresh:0; url=index.php");
+		if($this->won)
+		{
+			echo ($this->winner->getName()." has WON");
+		}
 	}
 	
 	public function getColor($sym)
@@ -114,7 +114,6 @@ class TicTacToe
 		$win = 0;
 		for ($n = 0; $n < $length; $n++)
 		{
-			echo ($col[$n]);
 			if($col[$n] == $curPlayer->getSymbol())
 			{
 				$win += 1;
@@ -122,7 +121,6 @@ class TicTacToe
 		}
 		if($win == 3)
 		{
-			echo ("COLUMN");
 			return True;
 		}
 	}
@@ -151,35 +149,39 @@ class TicTacToe
 		{
 			if($board[$n][$n] == $curPlayer->getSymbol())
 			{
-				echo ("N + N");
 				$win1 += 1;
 			}
-			if($board[$length- 1 - $n][$length- 1 - $n] == $curPlayer->getSymbol())
+			if($board[$n][$length - 1 - $n] == $curPlayer->getSymbol())
 			{
 				$win2 += 1;
 			}
 		}
-		if($win1 or $win2 == 3)
+		if($win1 == 3 or $win2 == 3)
 		{
 			return True;
 		}
+		else
+		{
+			return False;
+		}
 	}
 	
-	public function checkWinCondition($board)
+	public function checkWinCondition($board, $curPlayer)
 	{
 	// checks if the is a win condition on the current board
 		$length = count($board);
 		$flippedBoard = $this->flipBoard($board, $length);
 		for ($row = 0; $row < $length; $row++) 
 		{
-			if($this->checkRow($this->currentPlayer, $board[$row], $length) or $this->checkCol($this->currentPlayer, $flippedBoard[$row], $length) or $this->checkDiag($this->currentPlayer, $board, $length))
+			if($this->checkRow($curPlayer, $board[$row], $length) or $this->checkCol($curPlayer, $flippedBoard[$row], $length) or $this->checkDiag($curPlayer, $board, $length))
 			{
-				$this->winning = 1;
+				$this->won = True;
+				$this->winner = $curPlayer;
 				return;
 			}
 			else
 			{
-				$this->winning = 0;
+				$this->won = False;
 			}
 		}
 	}
