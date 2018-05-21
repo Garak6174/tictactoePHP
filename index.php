@@ -1,9 +1,12 @@
 <?php
 session_start();
 
-require_once "tictactoe.php";
-require_once "player.php";
-require_once "board.php";
+define ('BASEPATH', realpath(dirname(__FILE__)));
+require_once (BASEPATH.DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR.'autoload.php');
+
+//require_once "tictactoe.php";
+//require_once "player.php";
+//require_once "board.php";
 
 if(empty($_SESSION['game']))
 {
