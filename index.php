@@ -4,10 +4,8 @@ session_start();
 define ('BASEPATH', realpath(dirname(__FILE__)));
 require_once (BASEPATH.DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR.'autoload.php');
 
-//require_once "tictactoe.php";
-//require_once "player.php";
-//require_once "board.php";
-
+//check if the 'game' session is filled with data
+//if not, a new game ist created
 if(empty($_SESSION['game']))
 {
 	$p1 = new Player("Player/X/", "X");
@@ -20,7 +18,9 @@ else
 	$newGame = unserialize($_SESSION['game']);
 }
 $_SESSION['game'] = serialize($newGame);
-//session_destroy();
+
+//only here for testing
+//session_destroy(); 
 ?>
 <!DOCTYPE html>
 <head>
@@ -66,8 +66,10 @@ $_SESSION['game'] = serialize($newGame);
             <p>Type your game instructions here...</p>
             <form method="get" action="index.php">
                 <?php
+					//calls the method of the 'board' to display its array
 					$newGame->board->displayBoard($newGame);
 					$newGame->setSymbol();
+					//saves the state of the game
 					$_SESSION['game'] = serialize($newGame);
 				?>
             </form>

@@ -12,11 +12,17 @@ class TicTacToe
 	$this->player1->color = "colorX";
 	$this->player2 = $player2;
 	$this->player2->color = "colorO";
+	//added the board to an attribute for easy referencing
 	$this->board = $board;
+	//current player in a new game is always player1
 	$this->currentPlayer = $this->player1;
+	//counting the turns to reliably tell whos turn it is
 	$this->turn = 0;
+	//boolean attribute to tell if the page has already been refreshed
 	$this->isRefreshed = True;
+	//True == Win condition has been met
 	$this->won = False;
+	//which player has won, used in text output
 	$this->winner = null;
 	}
 	
@@ -38,6 +44,8 @@ class TicTacToe
 			$this->currentPlayer = $this->player2;
 		}
 	}
+	
+	//refreshes the page if @isRefreshed == False and sets it to True
 	private function refreshPage()
 	{
 		if(!$this->isRefreshed)
@@ -46,12 +54,13 @@ class TicTacToe
 			$this->isRefreshed = True;
 		}
 	}
-		
+	
+	//Main method where all other methods are called from
 	public function setSymbol()
 	{
-		//
+		//destroys the session and refreshed the page if the last possible turn has been made
+		//in a 3x3 grid the highest number of turns are 9
 		$arraySize = pow(count($this->board->getArray()), 2);
-		//$arraySize = count($this->board->getArray(), 1);
 		if($this->turn >= $arraySize or $this->won == True)
 		{
 			session_destroy();
@@ -81,6 +90,8 @@ class TicTacToe
 		}
 	}
 	
+	//returns the color for each symbol
+	//hardcoded at the moment -> should be made more flexible in the future
 	public function getColor($sym)
 	{
 		if($sym == "X")
@@ -93,6 +104,8 @@ class TicTacToe
 		}
 	}
 	
+	//After each turn made it checks if there are 3 symbols of the current player in a row
+	//if true it returns True
 	private function checkRow($curPlayer, $row, $length)
 	{
 		$win = 0;
@@ -109,6 +122,8 @@ class TicTacToe
 		}
 	}
 	
+	//After each turn made it checks if there are 3 symbols of the current player in a col
+	//if true it returns True
 	private function checkCol($curPlayer, $col, $length)
 	{
 		$win = 0;
@@ -125,6 +140,8 @@ class TicTacToe
 		}
 	}
 	
+	//flips the board at 90 degree counterclockwise for easy handling of columns
+	//and then returns the newly created array
 	private function flipBoard($board, $length)
 	{
 		$newBoard = array(
@@ -141,6 +158,8 @@ class TicTacToe
 		return $newBoard;
 	}
 	
+	//checks if the are three symbols of the current player in any diagonal
+	//if true it returns true
 	private function checkDiag($curPlayer, $board, $length)
 	{
 		$win1 = 0;
@@ -166,9 +185,9 @@ class TicTacToe
 		}
 	}
 	
+	// checkRow, checkCol and CheckDiag are called, if any of them are true it sets the @won to True
 	public function checkWinCondition($board, $curPlayer)
 	{
-	// checks if the is a win condition on the current board
 		$length = count($board);
 		$flippedBoard = $this->flipBoard($board, $length);
 		for ($row = 0; $row < $length; $row++) 

@@ -3,6 +3,7 @@ class Player
 {
 	public $playerName;
 	public $playerSym;
+	//the color set and used in the tictactoe.php file
 	public $color;
 	public function __construct($name, $symbol)
 	{
